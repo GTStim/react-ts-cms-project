@@ -2,7 +2,6 @@ import { useDispatch } from 'react-redux';
 import CodeType from '../model/CodeType';
 import { codeActions } from '../redux/slices/codeSlice';
 import { useEffect, useState } from 'react';
-import Employee from '../model/Product';
 import { Subscription } from 'rxjs';
 import { productService } from '../config/service-config';
 import Product from '../model/Product';
@@ -13,14 +12,19 @@ export function useDispatchCode() {
         let code: CodeType = CodeType.OK;
         let message: string = '';
 
-        if (error.includes('Authentication')) {
-            code = CodeType.AUTH_ERROR;
-            message = 'Authentication error, mooving to Sign In';
+        if (error) {
+            if (error.includes('Authentication')) {
+                code = CodeType.AUTH_ERROR;
+                message = 'Authentication error, moving to Sign In';
+            } else {
+                code = error.includes('unavailable') ? CodeType.SERVER_ERROR : CodeType.UNKNOWN;
+                message = error;
+            }
         } else {
-            code = error.includes('unavailable') ? CodeType.SERVER_ERROR : CodeType.UNKNOWN;
-            message = error;
+            message = successMessage;
         }
-        dispatch(codeActions.set({ code, message: message || successMessage }));
+
+        dispatch(codeActions.set({ code, message }));
     };
 }
 export function useSelectorProducts() {
@@ -34,7 +38,7 @@ export function useSelectorProducts() {
                     errorMessage = response;
                     dispatch(errorMessage, '');
                 } else {
-                    setProducts(response);  // Обновляем состояние продуктов
+                    setProducts(response); 
                 }
             },
         });
