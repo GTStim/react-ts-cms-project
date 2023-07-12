@@ -1,7 +1,7 @@
 import { Box, Container, Grid, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useRef } from 'react';
-import Chart from './Chart';
+
 export type StatisticsType = {
     id: any;
     min: number;
@@ -81,11 +81,7 @@ const Statistics: React.FC<Props> = ({ intervalOptions, submitFn, title, data })
                 </Grid>
                 <Grid item xs={8} sm={6}>
                     <Box sx={{ width: '80%', height: '40vh' }}>
-                        <Chart
-                            yAxis={'Employees'}
-                            data={data.map((s) => ({ key: s.min, amount: s.amount }))}
-                            dataKey={'key'}
-                        />
+                        
                     </Box>
                 </Grid>
             </Grid>
