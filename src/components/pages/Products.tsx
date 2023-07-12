@@ -36,7 +36,7 @@ const columnsCommon: GridColDef[] = [
     {
         field: 'gender', headerName: 'Gender', flex: 0.6, headerClassName: 'data-grid-header',
         align: 'center', headerAlign: 'center', renderCell: params => {
-            return params.value == "male" ? <Man/> : <Woman/>
+            return params.value === "male" ? <Man/> : <Woman/>
         }
     },
    ];

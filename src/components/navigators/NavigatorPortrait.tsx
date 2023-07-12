@@ -33,12 +33,15 @@ const NavigatorPortrait: React.FC<{ routes: RouteType[] }> = ({ routes }) => {
     }
     return (
         <Box sx={{ marginTop: { xs: '15vh', sm: '20vh' } }}>
-            <AppBar position="fixed">
+            <AppBar position="fixed" sx={{ backgroundColor: 'powderblue' }}>
                 <Toolbar>
-                    <IconButton onClick={toggleOpen} sx={{ color: 'white' }}>
+                    <IconButton onClick={toggleOpen} sx={{ color: 'black' }}>
                         <Menu />
                     </IconButton>
-                    <Typography sx={{ width: '100%', textAlign: 'center', fontSize: '1.5em' }}>
+
+                    <Typography
+                        sx={{ width: '100%', textAlign: 'center', fontSize: '1.5em', color: 'black' }}
+                    >
                         {getTitle()}
                     </Typography>
                     <Drawer open={flOpen} onClose={toggleOpen} anchor="left">

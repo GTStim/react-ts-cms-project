@@ -9,8 +9,6 @@ import routesConfig from './config/routes-config.json';
 import NotFound from "./components/pages/NotFound";
 import { RouteType } from "./components/navigators/Navigator";
 import UserData from "./model/UserData";
-import Employees from "./components/pages/Employees";
-import AddEmployee from "./components/pages/AddEmployee";
 import AgeStatistics from "./components/pages/AgeStatistics";
 import SalaryStatistics from "./components/pages/SalaryStatistics";
 import { StatusType } from "./model/StatusType";
@@ -22,8 +20,11 @@ import { Alert, Snackbar } from "@mui/material";
 import { codeActions } from "./redux/slices/codeSlice";
 import Generation from "./components/pages/Generation";
 import process from "process";
+import AddProduct from "./components/pages/AddProduct";
+import Products from "./components/pages/Products";
 const {always, authenticated, admin, noadmin, noauthenticated} = routesConfig;
 type RouteTypeOrder = RouteType & {order?: number}
+
 function getRoutes(userData: UserData): RouteType[] {
   const res: RouteTypeOrder[] = [];
   res.push(...always);
@@ -32,7 +33,7 @@ function getRoutes(userData: UserData): RouteType[] {
       if (userData.role === 'admin') {
         res.push(...admin);
         if(routesConfig.developmentAdmin &&
-           process.env.NODE_ENV!="production") {
+           process.env.NODE_ENV !== "production") {
             res.push(...routesConfig.developmentAdmin);
         }
       } else {
@@ -76,8 +77,8 @@ const App: React.FC = () => {
   return <BrowserRouter>
   <Routes>
     <Route path="/" element={<NavigatorDispatcher routes={routes}/>}>
-        <Route index element={<Employees/>}/>
-        <Route path="employees/add" element={<AddEmployee/>}/>
+        <Route index element={<Products/>}/>
+        <Route path="products/add" element={<AddProduct/>}/>
         <Route path="statistics/age" element={<AgeStatistics/>}/>
         <Route path="statistics/salary" 
         element={<SalaryStatistics/>}/>
