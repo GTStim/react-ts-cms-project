@@ -1,6 +1,6 @@
 {
     "always": [
-        { "to": "/", "label": "Products Table", "order": 1 }
+        { "to": "/", "label": "Products", "order": 1 }
     ],
     "authenticated": [
         { "to": "/signout", "label": "Sign Out", "order": 1000 },
@@ -12,5 +12,5 @@
     "noauthenticated": [
         { "to": "/signin", "label": "Sign In", "order": 2 }
     ],
-    "developmentAdmin": [{ "to": "/generation", "label": "Generate Employees", "order": 20 }]
+    "developmentAdmin": [{ "to": "/generation", "label": "Generate Products", "order": 20 }]
 }

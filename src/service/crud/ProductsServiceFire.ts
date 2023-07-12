@@ -1,6 +1,6 @@
 import { Observable, catchError, of } from 'rxjs';
-import Employee from '../../model/Employee';
-import EmployeesService from './EmployeesService';
+import Product from '../../model/Product';
+import ProductsService from './ProductsService';
 import appFirebase from '../../config/firebase-config';
 import {
     CollectionReference,
@@ -15,12 +15,11 @@ import {
 } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { getRandomInt } from '../../util/random';
-import { getISODateStr } from '../../util/date-functions';
 const MIN_ID = 100000;
 const MAX_ID = 1000000;
 
-function convertEmployee(empl: Employee, id?: string): any {
-    const res: any = { ...empl, id: id ? id : empl.id, birthDate: getISODateStr(empl.birthDate) };
+function convertEmployee(empl: Product, id?: string): any {
+    const res: any = { ...empl, id: id ? id : empl.id };
     return res;
 }
 function getErrorMessage(firestoreError: FirestoreError): string {
@@ -35,9 +34,10 @@ function getErrorMessage(firestoreError: FirestoreError): string {
     }
     return errorMessage;
 }
-export default class EmployeesServiceFire implements EmployeesService {
-    collectionRef: CollectionReference = collection(getFirestore(appFirebase), 'employees');
-    async addEmployee(empl: Employee): Promise<Employee> {
+export default class ProductsServiceFire implements ProductsService {
+    collectionRef: CollectionReference = collection(getFirestore(appFirebase), 'products');
+
+    async addProduct(empl: Product): Promise<Product> {
         const id: string = await this.getId();
         const employee = convertEmployee(empl, id);
         const docRef = this.getDocRef(id);
@@ -65,15 +65,18 @@ export default class EmployeesServiceFire implements EmployeesService {
         } while (await this.exists(id));
         return id;
     }
-    getEmployees(): Observable<string | Employee[]> {
-        return collectionData(this.collectionRef).pipe(catchError(error => {
-            const firestorError: FirestoreError = error;
-            const errorMessage = getErrorMessage(firestorError);
-            return of(errorMessage);
-        })) as Observable<string | Employee[]>
+
+    getProducts(): Observable<string | Product[]> {
+        return collectionData(this.collectionRef).pipe(
+            catchError((error) => {
+                const firestorError: FirestoreError = error;
+                const errorMessage = getErrorMessage(firestorError);
+                return of(errorMessage);
+            }),
+        ) as Observable<string | Product[]>;
     }
-    
-    async deleteEmployee(id: any): Promise<void> {
+
+    async deleteProduct(id: any): Promise<void> {
         const docRef = this.getDocRef(id);
         if (!(await this.exists(id))) {
             throw 'not found';
@@ -86,7 +89,7 @@ export default class EmployeesServiceFire implements EmployeesService {
             throw errorMessage;
         }
     }
-    async updateEmployee(empl: Employee): Promise<Employee> {
+    async updateProduct(empl: Product): Promise<Product> {
         if (!empl.id || !(await this.exists(empl.id))) {
             throw 'not found';
         }

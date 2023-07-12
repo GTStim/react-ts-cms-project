@@ -2,9 +2,10 @@ import { useDispatch } from 'react-redux';
 import CodeType from '../model/CodeType';
 import { codeActions } from '../redux/slices/codeSlice';
 import { useEffect, useState } from 'react';
-import Employee from '../model/Employee';
+import Employee from '../model/Product';
 import { Subscription } from 'rxjs';
-import { employeesService } from '../config/service-config';
+import { productService } from '../config/service-config';
+import Product from '../model/Product';
 
 export function useDispatchCode() {
     const dispatch = useDispatch();
@@ -22,22 +23,22 @@ export function useDispatchCode() {
         dispatch(codeActions.set({ code, message: message || successMessage }));
     };
 }
-export function useSelectorEmployees() {
+export function useSelectorProducts() {
     const dispatch = useDispatchCode();
-    const [employees, setEmployees] = useState<Employee[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     useEffect(() => {
-        const subscription: Subscription = employeesService.getEmployees().subscribe({
-            next(emplArray: Employee[] | string) {
+        const subscription: Subscription = productService.getProducts().subscribe({
+            next(response: Product[] | string) {
                 let errorMessage: string = '';
-                if (typeof emplArray === 'string') {
-                    errorMessage = emplArray;
+                if (typeof response === 'string') {
+                    errorMessage = response;
+                    dispatch(errorMessage, '');
                 } else {
-                    setEmployees(emplArray.map((e) => ({ ...e, birthDate: new Date(e.birthDate) })));
+                    setProducts(response);  // Обновляем состояние продуктов
                 }
-                dispatch(errorMessage, '');
             },
         });
         return () => subscription.unsubscribe();
     }, []);
-    return employees;
+    return products;
 }

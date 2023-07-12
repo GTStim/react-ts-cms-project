@@ -1,25 +1,26 @@
-import Employee from '../../model/Employee';
-import { EmployeeForm } from '../forms/EmployeeForm';
+import Product from '../../model/Product';
+import { ProductForm } from '../forms/ProductForm';
 import InputResult from '../../model/InputResult';
-import { employeesService } from '../../config/service-config';
+import { productService } from '../../config/service-config';
 
 import { useDispatchCode } from '../../hooks/hooks';
 
-const AddEmployee: React.FC = () => {
+const AddProduct: React.FC = () => {
     let successMessage: string = '';
     let errorMessage = '';
     const dispatch = useDispatchCode();
-    async function submitFn(empl: Employee): Promise<InputResult> {
+    
+    async function submitFn(empl: Product): Promise<InputResult> {
         const res: InputResult = { status: 'success', message: '' };
         try {
-            const employee: Employee = await employeesService.addEmployee(empl);
-            successMessage = `employee with id: ${employee.id} has been added`;
+            const product: Product = await productService.addProduct(empl);
+            successMessage = `product with id: ${product.id} has been added`;
         } catch (error: any) {
             errorMessage = error;
         }
         dispatch(errorMessage, successMessage);
         return res;
     }
-    return <EmployeeForm submitFn={submitFn} />;
+    return <ProductForm submitFn={submitFn} />;
 };
-export default AddEmployee;
+export default AddProduct;

@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -30,26 +28,52 @@ function Copyright(props: any) {
         </Typography>
     );
 }
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
+
 type Props = {
-    submitFn: (loginData: LoginData) => Promise<InputResult>
-    networks?: NetworkType[]
-}
-const SignInForm: React.FC<Props> = ({ submitFn, networks }) => {
+    submitFn: (loginData: LoginData) => Promise<InputResult>;
+    registerFn: (loginData: LoginData) => Promise<InputResult>;
+    networks?: NetworkType[];
+};
+
+
+
+const SignInForm: React.FC<Props> = ({ submitFn, registerFn, networks }) => {
     const message = React.useRef<string>('');
     const [open, setOpen] = React.useState(false);
     const severity = React.useRef<StatusType>('success');
+
+    const handleSignIn = async (email: string, password: string) => {
+        const result = await submitFn({ email, password });
+        message.current = result.message!;
+        severity.current = result.status;
+        message.current && setOpen(true);
+    };
+
+    const handleSignUp = async (email: string, password: string) => {
+        const result = await registerFn({ email, password });
+        message.current = result.message!;
+        severity.current = result.status;
+        message.current && setOpen(true);
+    };
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         const email: string = data.get('email')! as string;
         const password: string = data.get('password')! as string;
-        const result = await submitFn({ email, password });
-        message.current = result.message!;
-        severity.current = result.status;
-        message.current && setOpen(true);
+
+        handleSignIn(email, password);
+    };
+
+    const handleRegistration = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        const form = document.forms[0];
+        const data = new FormData(form);
+        const email: string = data.get('email')! as string;
+        const password: string = data.get('password')! as string;
+
+        handleSignUp(email, password);
     };
 
     return (
@@ -83,7 +107,7 @@ const SignInForm: React.FC<Props> = ({ submitFn, networks }) => {
                                     name="email"
                                     autoComplete="email"
                                     autoFocus
-
+                                    type="email"
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6} md={12}>
@@ -96,40 +120,53 @@ const SignInForm: React.FC<Props> = ({ submitFn, networks }) => {
                                     type="password"
                                     id="password"
                                     autoComplete="current-password"
-
                                 />
                             </Grid>
+                            <Grid item xs={12} sm={6} md={12}>
+                                <Button type="submit" fullWidth variant="contained">
+                                    Sign In
+                                </Button>
+                            </Grid>
+
                             <Grid item xs={12} sm={6} md={12}>
                                 <Button
                                     type="submit"
                                     fullWidth
-                                    variant="contained"
-
+                                    variant="contained" 
+                                    onClick={handleRegistration}                                   
                                 >
-                                    Sign In
+                                    Sign up
                                 </Button>
                             </Grid>
-                            {networks && networks.length > 0 && <Grid item xs={6}  sm={6} md={6}>
-                                <Divider sx={{ width: "100%", fontWeight: "bold" }}>or</Divider>
-                            {networks.map(n =>  <Button key={n.providerName}
-                                onClick={() =>
-                                    submitFn({ email: n.providerName, password: '' })} fullWidth variant="outlined"
-                                sx={{ mt: 2 }}
-                            >
-
-                                <Avatar src={n.providerIconUrl} sx={{ width: { xs: '6vh', sm: '6vw', lg: '3vw' } }} />
-                            </Button>)}
-                            </Grid>}
+                            {networks && networks.length > 0 && (
+                                <Grid item xs={6} sm={6} md={6}>
+                                    <Divider sx={{ width: '100%', fontWeight: 'bold' }}>or</Divider>
+                                    {networks.map((n) => (
+                                        <Button
+                                            key={n.providerName}
+                                            onClick={() =>
+                                                submitFn({ email: n.providerName, password: '' })
+                                            }
+                                            fullWidth
+                                            variant="outlined"
+                                            sx={{ mt: 2 }}
+                                        >
+                                            <Avatar
+                                                src={n.providerIconUrl}
+                                                sx={{ width: { xs: '6vh', sm: '6vw', lg: '3vw' } }}
+                                            />
+                                        </Button>
+                                    ))}
+                                </Grid>
+                            )}
                         </Grid>
-
-
-
-
-
                     </Box>
-                    <Snackbar open={open} autoHideDuration={10000}
-                        onClose={() => setOpen(false)}>
-                        <Alert onClose={() => setOpen(false)} severity={severity.current} sx={{ width: '100%' }}>
+                    <Snackbar open={open} autoHideDuration={10000} onClose={() => setOpen(false)}>
+                        <Alert
+                            onClose={() => setOpen(false)}
+                            severity={severity.current}
+                            sx={{ width: '100%' }}
+                        >
                             {message.current}
                         </Alert>
                     </Snackbar>
@@ -138,5 +175,5 @@ const SignInForm: React.FC<Props> = ({ submitFn, networks }) => {
             </Container>
         </ThemeProvider>
     );
-}
+};
 export default SignInForm;
