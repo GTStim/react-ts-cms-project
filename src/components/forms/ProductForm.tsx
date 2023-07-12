@@ -1,4 +1,4 @@
-// src\components\forms\ProductForm.tsx
+
 import { Button, Grid, TextField, Box } from '@mui/material';
 import Product from '../../model/Product';
 import InputResult from '../../model/InputResult';
@@ -25,6 +25,11 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
         event.preventDefault();
         const res = await submitFn(product);
         res.status === 'success' && event.target.reset();
+        setProduct(initialProduct);
+    }
+
+    function onReset() {
+        setProduct(initialProduct);
     }
   
     return (
@@ -81,7 +86,7 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
 
                 <Box sx={{ marginTop: { xs: '10vh', sm: '5vh' }, textAlign: 'center' }}>
                     <Button type="submit">Submit</Button>
-                    <Button type="reset">Reset</Button>
+                     <Button type="reset" onClick={onReset}>Reset</Button>
                 </Box>
             </form>
         </Box>

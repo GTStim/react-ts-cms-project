@@ -9,7 +9,7 @@ import routesConfig from './config/routes-config.json';
 import NotFound from "./components/pages/NotFound";
 import { RouteType } from "./components/navigators/Navigator";
 import UserData from "./model/UserData";
-import AgeStatistics from "./components/pages/AgeStatistics";
+import Cart  from "./components/pages/Cart";
 import SalaryStatistics from "./components/pages/SalaryStatistics";
 import { StatusType } from "./model/StatusType";
 import CodeType from "./model/CodeType";
@@ -79,7 +79,7 @@ const App: React.FC = () => {
     <Route path="/" element={<NavigatorDispatcher routes={routes}/>}>
         <Route index element={<Products/>}/>
         <Route path="products/add" element={<AddProduct/>}/>
-        <Route path="statistics/age" element={<AgeStatistics/>}/>
+        <Route path="products/cart" element={<Cart/>}/>
         <Route path="statistics/salary" 
         element={<SalaryStatistics/>}/>        
         <Route path="signin" element={<SignIn/>}/>

@@ -2,9 +2,8 @@ import Product from '../../model/Product';
 import { ProductForm } from '../forms/ProductForm';
 import InputResult from '../../model/InputResult';
 import { productService } from '../../config/service-config';
-
 import { useDispatchCode } from '../../hooks/hooks';
-import CodeType from '../../model/CodeType';
+
 
 const AddProduct: React.FC = () => {
     const dispatch = useDispatchCode();

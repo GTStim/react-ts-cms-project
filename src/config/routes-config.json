@@ -3,12 +3,11 @@
         { "to": "/", "label": "Products", "order": 1 }
     ],
     "authenticated": [
-        { "to": "/signout", "label": "Sign Out", "order": 1000 },
-        { "to": "/statistics/age", "label": "Age Statistics", "order": 100 },
+        { "to": "/signout", "label": "Sign Out", "order": 1000 },        
         { "to": "/statistics/salary", "label": "Salary Statistics", "order": 100 }
     ],
     "admin": [{ "to": "/products/add", "label": "Add Product", "order": 2 }],
-    "noadmin": [],
+    "noadmin": [{ "to": "products/cart", "label": "Cart", "order": 999 }],
     "noauthenticated": [
         { "to": "/signin", "label": "Sign In", "order": 2 }
     ],

@@ -1,6 +1,8 @@
-import { AppBar, Box, Tab, Tabs } from '@mui/material';
+import { AppBar, Box, Grid, Tab, Tabs } from '@mui/material';
 import { ReactNode, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import Cart from '../pages/Cart';
+import SignOut from '../pages/SignOut';
 export type RouteType = {
     to: string;
     label: string;
@@ -30,7 +32,7 @@ const Navigator: React.FC<{ routes: RouteType[] }> = ({ routes }) => {
     return (
         <Box mt={10}>
             <AppBar sx={{ backgroundColor: 'powderblue' }}>
-            <Tabs value={value < routes.length ? value : 0} onChange={onChangeFn} color="black">
+                <Tabs value={value < routes.length ? value : 0} onChange={onChangeFn} color="black">
                     {getTabs()}
                 </Tabs>
             </AppBar>
