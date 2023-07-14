@@ -43,7 +43,7 @@ const columnsCommon: GridColDef[] = [
     
     {
         field: 'price', headerName: 'Price', type: 'number', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
+        align: 'center', headerAlign: 'center', valueFormatter: (params) => `$${params.value}`
     }
    
    ];
@@ -89,8 +89,7 @@ const Products: React.FC = () => {
         columnsCommon[1],
         {
             field: 'actions', type: "actions", getActions: (params) => {
-                return [
-                   
+                return [                   
                     <GridActionsCellItem label="details" icon={<Visibility />}
                         onClick={() => {
                             productId.current = params.id as any;

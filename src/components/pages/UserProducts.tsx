@@ -30,9 +30,9 @@ const ProductsPage: React.FC = () => {
         const quantity = quantities[product.id] || 1;
         addToCart(product, quantity);
         setAlertMessage(
-            `Added ${quantity} of "${product.title}" with total price ${
+            `Added ${quantity} of "${product.title}" with total price $${
                 product.price * quantity
-            }$ to your cart!`,
+            } to your cart!`,
         );
         setQuantities({ ...quantities, [product.id]: 1 });
     };
@@ -57,8 +57,7 @@ const ProductsPage: React.FC = () => {
                                 sx={{ objectFit: 'contain' }}
                             />
                             <CardContent sx={{ flexGrow: 1 }}>
-                                {' '}
-                                {/* добавлено свойство flexGrow */}
+                                
                                 <Typography gutterBottom variant="h5" component="div">
                                     {product.title}
                                 </Typography>
@@ -66,7 +65,7 @@ const ProductsPage: React.FC = () => {
                                     {product.description}
                                 </Typography>
                                 <Typography variant="body1">Category: {product.category}</Typography>
-                                <Typography variant="subtitle1">Price: {product.price}$</Typography>
+                                <Typography variant="subtitle1">Price: ${product.price}</Typography>
                             </CardContent>
                             {auth && (
                                 <Box
