@@ -11,7 +11,7 @@ import {
     FirestoreError,
     setDoc,
     deleteDoc,
-    doc
+    doc,
 } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { getRandomInt } from '../../util/random';
@@ -104,9 +104,4 @@ export default class ProductsServiceFire implements ProductsService {
         }
         return product;
     }
-
-    
-
-
-
 }

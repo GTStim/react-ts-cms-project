@@ -38,7 +38,7 @@ export function useSelectorProducts() {
                     errorMessage = response;
                     dispatch(errorMessage, '');
                 } else {
-                    setProducts(response); 
+                    setProducts(response);
                 }
             },
         });
@@ -46,4 +46,3 @@ export function useSelectorProducts() {
     }, []);
     return products;
 }
-
