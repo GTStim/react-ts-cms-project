@@ -92,6 +92,7 @@ const ProductsPage: React.FC = () => {
                                             sx={{
                                                 backgroundColor: isInCart(product) ? 'yellow' : '',
                                                 color: isInCart(product) ? 'black' : '',
+                                                fontSize: isInCart(product) ? '0.8rem' : '',
                                                 '&:hover': {
                                                     backgroundColor: isInCart(product) ? 'yellow' : '',
                                                     color: isInCart(product) ? 'black' : '',
