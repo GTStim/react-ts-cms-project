@@ -109,28 +109,7 @@ export default class ProductsServiceFire implements ProductsService {
         return product;
     }
 
-    private userCarts = collection(getFirestore(appFirebase), 'userCarts');
-
-    async addToUserCart(userId: string, product: Product): Promise<void> {
-        const cartRef = collection(this.userCarts, userId);
-        await addDoc(cartRef, product);
-    }
-
-    async getUserCart(userId: string): Promise<Product[]> {
-        const cartRef = collection(this.userCarts, userId);
-        const cartSnap = await getDocs(cartRef);
-        return cartSnap.docs.map(doc => doc.data() as Product);
-    }
-
-    async removeFromUserCart(userId: string, product: Product): Promise<void> {
-        const cartRef = collection(this.userCarts, userId);
-        const productRef = query(cartRef, where('id', '==', product));
-        const productSnap = await getDocs(productRef);
-        if (!productSnap.empty) {
-            const productDoc = productSnap.docs[0];
-            await deleteDoc(productDoc.ref);
-        }
-    }
+    
 
 
 
