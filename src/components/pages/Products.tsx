@@ -13,9 +13,9 @@ const ProductsPage: React.FC = () => {
                         <CardMedia
                             component="img"
                             alt={product.title}
-                            height="100" // уменьшили высоту картинки до 100
+                            height="100"
                             image={product.image}
-                            sx={{ objectFit: 'contain' }} // изменили 'cover' на 'contain'
+                            sx={{ objectFit: 'contain' }}
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component="div">
@@ -28,7 +28,7 @@ const ProductsPage: React.FC = () => {
                                 {product.category}
                             </Typography>
                             <Typography variant="subtitle1">
-                                Price: {product.price}
+                                Price: {product.price}$
                             </Typography>
                         </CardContent>
                     </Card>
