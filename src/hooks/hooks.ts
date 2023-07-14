@@ -3,7 +3,7 @@ import CodeType from '../model/CodeType';
 import { codeActions } from '../redux/slices/codeSlice';
 import { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
-import { productService } from '../config/service-config';
+import { productsService } from '../config/service-config';
 import Product from '../model/Product';
 
 export function useDispatchCode() {
@@ -31,7 +31,7 @@ export function useSelectorProducts() {
     const dispatch = useDispatchCode();
     const [products, setProducts] = useState<Product[]>([]);
     useEffect(() => {
-        const subscription: Subscription = productService.getProducts().subscribe({
+        const subscription: Subscription = productsService.getProducts().subscribe({
             next(response: Product[] | string) {
                 let errorMessage: string = '';
                 if (typeof response === 'string') {

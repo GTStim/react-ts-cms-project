@@ -7,7 +7,7 @@ const ProductsPage: React.FC = () => {
 
     return (
         <Grid container spacing={3}>
-            {products.map(product => (
+            {products.map((product) => (
                 <Grid item xs={6} sm={3} lg={2} key={product.id}>
                     <Card sx={{ height: '100%' }}>
                         <CardMedia
@@ -24,12 +24,8 @@ const ProductsPage: React.FC = () => {
                             <Typography variant="body2" color="textSecondary">
                                 {product.description}
                             </Typography>
-                            <Typography variant="body1">
-                                {product.category}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                                Price: {product.price}$
-                            </Typography>
+                            <Typography variant="body1">Category: {product.category}</Typography>
+                            <Typography variant="subtitle1">Price: {product.price}$</Typography>
                         </CardContent>
                     </Card>
                 </Grid>

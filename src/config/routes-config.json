@@ -2,7 +2,7 @@
     "always": [],
     "authenticated": [
         { "to": "/signout", "label": "Sign Out", "order": 1000 },
-        { "to": "/statistics/salary", "label": "Salary Statistics", "order": 100 }
+        { "to": "orders", "label": "Orders", "order": 100 }
     ],
     "admin": [
         { "to": "/products/add", "label": "Add Product", "order": 2 },

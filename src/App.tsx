@@ -10,7 +10,7 @@ import NotFound from "./components/pages/NotFound";
 import { RouteType } from "./components/navigators/Navigator";
 import UserData from "./model/UserData";
 import Cart  from "./components/pages/Cart";
-import SalaryStatistics from "./components/pages/SalaryStatistics";
+import SalaryStatistics from "./components/pages/Orders";
 import { StatusType } from "./model/StatusType";
 import CodeType from "./model/CodeType";
 import { useDispatch } from "react-redux";
@@ -85,7 +85,7 @@ const App: React.FC = () => {
         <Route path="products/add" element={<AddProduct/>}/>
         <Route path="products/admin" element={<AdminProducts/>}/>
         <Route path="products/cart" element={<Cart/>}/>
-        <Route path="statistics/salary" element={<SalaryStatistics/>}/>  
+        <Route path="orders" element={<SalaryStatistics/>}/>  
               
         <Route path="signin" element={<SignIn/>}/>
         <Route path="signout" element={<SignOut/>}/>        

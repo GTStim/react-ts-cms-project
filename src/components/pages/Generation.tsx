@@ -2,7 +2,7 @@ import productsData from '../../data/test-prod-json.json';
 import { useDispatch } from 'react-redux';
 import InputResult from '../../model/InputResult';
 import Input from '../common/Input';
-import { productService} from '../../config/service-config';
+import { productsService} from '../../config/service-config';
 import CodeType from '../../model/CodeType';
 import { codeActions } from '../../redux/slices/codeSlice';
 import Product from '../../model/Product';
@@ -32,7 +32,7 @@ const Generation: React.FC = () => {
         let count: number = 0;
         for (let i = 0; i < amount; i++) {
             try {
-                await productService.addProduct(getRandomProduct());
+                await productsService.addProduct(getRandomProduct());
                 count++;
             } catch (error: any) {
                 if (error.includes('Authentication')) {

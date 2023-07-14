@@ -1,7 +1,7 @@
 import Product from '../../model/Product';
 import { ProductForm } from '../forms/ProductForm';
 import InputResult from '../../model/InputResult';
-import { productService } from '../../config/service-config';
+import { productsService } from '../../config/service-config';
 import { useDispatchCode } from '../../hooks/hooks';
 
 
@@ -13,7 +13,7 @@ const AddProduct: React.FC = () => {
         let successMessage: string = '';
         const res: InputResult = { status: 'success', message: '' };
         try {
-            const product: Product = await productService.addProduct(empl);
+            const product: Product = await productsService.addProduct(empl);
             successMessage = `product with id: ${product.id} has been added`;
         } catch (error: any) {
             errorMessage = error.message;

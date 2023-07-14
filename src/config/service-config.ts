@@ -5,4 +5,4 @@ import AuthServiceFire from '../service/auth/AuthServiceFire';
 
 export const authService: AuthService = new AuthServiceFire();
 
-export const productService: EmployeesService = new EmployeesServiceFire();
+export const productsService: EmployeesService = new EmployeesServiceFire();
