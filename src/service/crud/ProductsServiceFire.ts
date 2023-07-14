@@ -11,11 +11,7 @@ import {
     FirestoreError,
     setDoc,
     deleteDoc,
-    doc,
-    addDoc,
-    getDocs,
-    query,
-    where,
+    doc
 } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { getRandomInt } from '../../util/random';

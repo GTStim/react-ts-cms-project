@@ -1,6 +1,7 @@
 // src\components\pages\UserProducts.tsx
 import React from 'react';
-import { useSelectorProducts, useCart } from '../../hooks/hooks';
+import { useSelectorProducts } from '../../hooks/hooks';
+import {useCart} from '../../hooks/cartHooks';
 import {
     Card,
     CardContent,

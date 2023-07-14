@@ -1,24 +1,8 @@
-import { Observable, catchError, of } from 'rxjs';
 import Product from '../../model/Product';
-import ProductsService from './ProductsService';
+
 import appFirebase from '../../config/firebase-config';
-import {
-    CollectionReference,
-    DocumentReference,
-    getFirestore,
-    collection,
-    getDoc,
-    FirestoreError,
-    setDoc,
-    deleteDoc,
-    doc,
-    addDoc,
-    getDocs,
-    query,
-    where,
-} from 'firebase/firestore';
-import { collectionData } from 'rxfire/firestore';
-import { getRandomInt } from '../../util/random';
+import { getFirestore, collection, deleteDoc, addDoc, getDocs, query, where } from 'firebase/firestore';
+
 import CartService from './CartService';
 
 export default class CartServiceFire implements CartService {
@@ -32,7 +16,7 @@ export default class CartServiceFire implements CartService {
     async getUserCart(userId: string): Promise<Product[]> {
         const cartRef = collection(this.userCarts, userId);
         const cartSnap = await getDocs(cartRef);
-        return cartSnap.docs.map(doc => doc.data() as Product);
+        return cartSnap.docs.map((doc) => doc.data() as Product);
     }
 
     async removeFromUserCart(userId: string, product: Product): Promise<void> {
@@ -44,5 +28,4 @@ export default class CartServiceFire implements CartService {
             await deleteDoc(productDoc.ref);
         }
     }
-    
 }

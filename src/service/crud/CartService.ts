@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+
 import Product from '../../model/Product';
 
 export default interface CartService {    
