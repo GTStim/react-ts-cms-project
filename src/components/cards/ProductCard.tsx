@@ -1,4 +1,4 @@
-import { Button, Card, CardActions, Typography, CardMedia, Grid, CardContent } from '@mui/material';
+import { Button, Card, CardActions, Typography, CardMedia, Grid, CardContent, Box } from '@mui/material';
 import Product from '../../model/Product';
 import { useSelectorAuth } from '../../redux/store';
 
@@ -13,14 +13,16 @@ const ProductCard: React.FC<Props> = ({ product, actionFn }) => {
     return (
         <Grid container spacing={3} justifyContent="center" alignItems="center">
         <Grid item xs={10} key={product.id}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+           
                 <CardMedia
                     component="img"
                     alt={product.title}
                     height="100"
                     image={product.image}
-                    sx={{ objectFit: 'contain' }}
+                    sx={{ objectFit: 'contain'}}
                 />
+              
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography gutterBottom variant="h5" component="div">
                         {product.title}

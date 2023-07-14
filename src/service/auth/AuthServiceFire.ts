@@ -4,8 +4,7 @@ import AuthService from './AuthService';
 import { getFirestore, collection, getDoc, doc } from 'firebase/firestore';
 import {
     AuthProvider,
-    GoogleAuthProvider,
-    TwitterAuthProvider,
+    GoogleAuthProvider,    
     createUserWithEmailAndPassword,
     getAuth,
     signInWithEmailAndPassword,
@@ -15,8 +14,7 @@ import {
 import appFirebase from '../../config/firebase-config';
 
 const mapProviders: Map<string, AuthProvider> = new Map([
-    ['GOOGLE', new GoogleAuthProvider()],
-    ['TWITER', new TwitterAuthProvider()],
+    ['GOOGLE', new GoogleAuthProvider()],    
 ]);
 
 function getErrorMessage(error: any): string {

@@ -8,7 +8,7 @@
         { "to": "/products/add", "label": "Add Product", "order": 2 },
         { "to": "/products/admin", "label": "Products", "order": 3 }
     ],
-    "noadmin": [{ "to": "products/cart", "label": "Cart", "order": 999 }],
+    "noadmin": [{ "to": "cart", "label": "Cart", "order": 999 }],
     "noauthenticated": [{ "to": "/signin", "label": "Sign In", "order": 2 }],
     "developmentAdmin": [{ "to": "/generation", "label": "Generate Products", "order": 20 }],
     "noauth": [{ "to": "/", "label": "Products", "order": 1 }]

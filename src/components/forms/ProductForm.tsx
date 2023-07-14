@@ -33,7 +33,8 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
     }
   
     return (
-        <Box sx={{ marginTop: { sm: '25vh' } }}>
+       
+        <Box sx={{ marginTop: { sm: '25vh' }}}>
             <form onSubmit={onSubmitFn}>
                 <Grid container spacing={4} justifyContent="center">
                     <Grid item xs={8} sm={5}>
@@ -90,5 +91,6 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
                 </Box>
             </form>
         </Box>
+        
     );
 };

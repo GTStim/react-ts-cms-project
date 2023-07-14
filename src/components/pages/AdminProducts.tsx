@@ -22,14 +22,6 @@ const columnsCommon: GridColDef[] = [
         align: 'center', headerAlign: 'center'
     },
     {
-        field: 'title', headerName: 'Title', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
-    },
-    {
-        field: 'description', headerName: 'Description', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
-    },    
-    {
         field: 'image',
         headerName: 'Image',
         flex: 0.7,
@@ -40,6 +32,15 @@ const columnsCommon: GridColDef[] = [
             <img src={params.value} alt="product" width="50" height="50"/>
         )
     },
+    {
+        field: 'title', headerName: 'Title', flex: 0.7, headerClassName: 'data-grid-header',
+        align: 'center', headerAlign: 'center'
+    },
+    {
+        field: 'description', headerName: 'Description', flex: 0.7, headerClassName: 'data-grid-header',
+        align: 'center', headerAlign: 'center'
+    },    
+    
     {
         field: 'price', headerName: 'Price', type: 'number', flex: 0.7, headerClassName: 'data-grid-header',
         align: 'center', headerAlign: 'center'

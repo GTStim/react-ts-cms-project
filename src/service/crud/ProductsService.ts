@@ -1,9 +1,12 @@
 import { Observable } from 'rxjs';
-import Employee from '../../model/Product';
+import Product from '../../model/Product';
 
 export default interface ProductsService {
-    addProduct(empl: Employee): Promise<Employee>;
-    getProducts(): Observable<Employee[] | string>;
+    addProduct(prod: Product): Promise<Product>;
+    getProducts(): Observable<Product[] | string>;
     deleteProduct(id: any): Promise<void>;
-    updateProduct(empl: Employee): Promise<Employee>;
+    updateProduct(prod: Product): Promise<Product>;
+    addToUserCart(userId: string, product: Product): Promise<void>;
+    getUserCart(userId: string): Promise<Product[]>;
+    removeFromUserCart(userId: string, product: Product): Promise<void>;
 }

@@ -21,7 +21,7 @@ import { codeActions } from "./redux/slices/codeSlice";
 import Generation from "./components/pages/Generation";
 import process from "process";
 import AddProduct from "./components/pages/AddProduct";
-import Products from "./components/pages/Products";
+import UserProducts from "./components/pages/UserProducts";
 import AdminProducts from "./components/pages/AdminProducts";
 const {always, authenticated, admin, noadmin, noauthenticated, noauth} = routesConfig;
 type RouteTypeOrder = RouteType & {order?: number}
@@ -81,10 +81,10 @@ const App: React.FC = () => {
   return <BrowserRouter>
   <Routes>
     <Route path="/" element={<NavigatorDispatcher routes={routes}/>}>
-        <Route index element={<Products/>}/>
+        <Route index element={<UserProducts/>}/>
         <Route path="products/add" element={<AddProduct/>}/>
         <Route path="products/admin" element={<AdminProducts/>}/>
-        <Route path="products/cart" element={<Cart/>}/>
+        <Route path="cart" element={<Cart/>}/>
         <Route path="orders" element={<SalaryStatistics/>}/>  
               
         <Route path="signin" element={<SignIn/>}/>

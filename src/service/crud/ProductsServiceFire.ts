@@ -12,14 +12,18 @@ import {
     setDoc,
     deleteDoc,
     doc,
+    addDoc,
+    getDocs,
+    query,
+    where,
 } from 'firebase/firestore';
 import { collectionData } from 'rxfire/firestore';
 import { getRandomInt } from '../../util/random';
 const MIN_ID = 100000;
 const MAX_ID = 1000000;
 
-function convertEmployee(empl: Product, id?: string): any {
-    const res: any = { ...empl, id: id ? id : empl.id };
+function convertProduct(prod: Product, id?: string): any {
+    const res: any = { ...prod, id: id ? id : prod.id };
     return res;
 }
 function getErrorMessage(firestoreError: FirestoreError): string {
@@ -37,18 +41,18 @@ function getErrorMessage(firestoreError: FirestoreError): string {
 export default class ProductsServiceFire implements ProductsService {
     collectionRef: CollectionReference = collection(getFirestore(appFirebase), 'products');
 
-    async addProduct(empl: Product): Promise<Product> {
+    async addProduct(prod: Product): Promise<Product> {
         const id: string = await this.getId();
-        const employee = convertEmployee(empl, id);
+        const product = convertProduct(prod, id);
         const docRef = this.getDocRef(id);
         try {
-            await setDoc(docRef, employee);
+            await setDoc(docRef, product);
         } catch (error: any) {
             const firestorError: FirestoreError = error;
             const errorMessage = getErrorMessage(firestorError);
             throw errorMessage;
         }
-        return employee;
+        return product;
     }
     private getDocRef(id: string): DocumentReference {
         return doc(this.collectionRef, id);
@@ -89,19 +93,45 @@ export default class ProductsServiceFire implements ProductsService {
             throw errorMessage;
         }
     }
-    async updateProduct(empl: Product): Promise<Product> {
-        if (!empl.id || !(await this.exists(empl.id))) {
+    async updateProduct(prod: Product): Promise<Product> {
+        if (!prod.id || !(await this.exists(prod.id))) {
             throw 'not found';
         }
-        const employee = convertEmployee(empl);
-        const docRef = this.getDocRef(empl.id);
+        const product = convertProduct(prod);
+        const docRef = this.getDocRef(prod.id);
         try {
-            await setDoc(docRef, employee);
+            await setDoc(docRef, product);
         } catch (error: any) {
             const firestorError: FirestoreError = error;
             const errorMessage = getErrorMessage(firestorError);
             throw errorMessage;
         }
-        return employee;
+        return product;
     }
+
+    private userCarts = collection(getFirestore(appFirebase), 'userCarts');
+
+    async addToUserCart(userId: string, product: Product): Promise<void> {
+        const cartRef = collection(this.userCarts, userId);
+        await addDoc(cartRef, product);
+    }
+
+    async getUserCart(userId: string): Promise<Product[]> {
+        const cartRef = collection(this.userCarts, userId);
+        const cartSnap = await getDocs(cartRef);
+        return cartSnap.docs.map(doc => doc.data() as Product);
+    }
+
+    async removeFromUserCart(userId: string, product: Product): Promise<void> {
+        const cartRef = collection(this.userCarts, userId);
+        const productRef = query(cartRef, where('id', '==', product));
+        const productSnap = await getDocs(productRef);
+        if (!productSnap.empty) {
+            const productDoc = productSnap.docs[0];
+            await deleteDoc(productDoc.ref);
+        }
+    }
+
+
+
 }
