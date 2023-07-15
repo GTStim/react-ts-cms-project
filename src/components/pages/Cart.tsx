@@ -9,7 +9,7 @@ import SnackbarAlert from '../common/SnackbarAlert';
 import { Confirmation } from '../common/Confirmation';
 
 const Cart: React.FC = () => {
-    const { cart, addToCart, removeFromCart } = useCart();
+    const { cart, addToCart, removeFromCart, clearCart } = useCart();
     const [rows, setRows] = useState<any[]>([]);
     const [productCount, setProductCount] = useState(0);
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -72,22 +72,39 @@ const Cart: React.FC = () => {
         setOpenConfirm(true);
     };
 
-    const increaseQuantity = async (productId: string) => {
-        //TODO
-    }
-    
-    const decreaseQuantity = (productId: string) => {
-        //TODO
+    const increaseQuantity = (productId: string) => {
+        const currentQuantity = quantities[productId];
+        addToCart(productId, 1);
+        setQuantities({
+            ...quantities,
+            [productId]: currentQuantity + 1,
+        });
     };
 
-    
+    const decreaseQuantity = (productId: string) => {
+        const currentQuantity = quantities[productId];
+        if (currentQuantity > 1) {
+            removeFromCart(productId, 1);
+            setQuantities({
+                ...quantities,
+                [productId]: currentQuantity - 1,
+            });
+        }
+    };
+
+    const handleRemoveAllFromCart = () => {
+        setProductToRemove(null);
+        setOpenConfirm(true);
+    };
 
     useEffect(() => {
         const loadCartData = async () => {
             const newRows = [];
+            const newQuantities: { [key: string]: number } = {};
 
             for (let productId in cart) {
                 const quantity = cart[productId];
+                newQuantities[productId] = quantity;
                 const product = await productsService.getProductById(productId);
 
                 const totalPrice = product.price * quantity;
@@ -103,11 +120,11 @@ const Cart: React.FC = () => {
             }
 
             setRows(newRows);
+            setQuantities(newQuantities); // Устанавливаем начальные значения для quantities
         };
 
         loadCartData();
     }, [cart]);
-
     useEffect(() => {
         setProductCount(Object.keys(cart).length);
     }, [cart]);
@@ -132,31 +149,63 @@ const Cart: React.FC = () => {
             </Box>
             <Confirmation
                 open={openConfirm}
-                title="Delete a product?"
-                content={`Are you sure you want to remove item "${productToRemove?.title}" from cart?`}
+                title={productToRemove ? 'Delete a product?' : 'Delete all products?'}
+                content={
+                    productToRemove
+                        ? `Are you sure you want to remove item "${productToRemove?.title}" from cart?`
+                        : 'Are you sure you want to remove all items from your cart?'
+                }
                 confirmFn={(isOk: boolean) => {
-                    if (isOk && productToRemove) {
-                        removeFromCart(productToRemove.id);
-                        setAlertMessage(
-                            `Product "${productToRemove.title}" was removed from your cart!`,
-                        );
+                    if (isOk) {
+                        if (productToRemove) {
+                            const currentQuantity = quantities[productToRemove.id];
+                            removeFromCart(productToRemove.id, currentQuantity);
+                            setQuantities({
+                                ...quantities,
+                                [productToRemove.id]: 0,
+                            });
+                            setAlertMessage(
+                                `Product "${productToRemove.title}" was removed from your cart!`,
+                            );
+                        } else {
+                            clearCart();
+                            setQuantities({});
+                            setAlertMessage('All products were removed from your cart!');
+                        }
                     }
                     setOpenConfirm(false);
                 }}
             />
 
-            <Box sx={{ display: 'flex', justifyContent: 'left', marginTop: '1rem' }}>
-                <p style={{ margin: '1rem' }}>Total items: {totalItems}</p>
-                <p style={{ margin: '1rem' }}>Total products: {productCount}</p>
-                <p style={{ margin: '1rem' }}>Total sum: ${totalSum}</p>
-
-                <Button variant="contained" color="primary" onClick={handleOrder}>
-                    Order Now
-                </Button>
-                <Button variant="contained" color="primary" onClick={handleOrder}>
-                    Delete all
-                </Button>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    width: '90vw',
+                }}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <p style={{ margin: '1rem' }}>Total items: {totalItems}</p>
+                    <p style={{ margin: '1rem' }}>Total products: {productCount}</p>
+                    <p style={{ margin: '1rem' }}>Total sum: ${totalSum}</p>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleOrder}
+                        style={{ marginRight: '1rem' }}
+                    >
+                        Order Now
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={handleRemoveAllFromCart}>
+                        Delete all
+                    </Button>
+                </Box>
             </Box>
+
             {alertMessage && <SnackbarAlert message={alertMessage} severity="success" />}
         </Box>
     );

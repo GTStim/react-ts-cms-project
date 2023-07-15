@@ -7,6 +7,7 @@ import { useSelectorAuth } from "../redux/store";
 export function useCart() {
     const [cart, setCart] = useState<{ [productId: string]: number }>({});  
     const userData = useSelectorAuth();
+    
 
     const isInCart = (product: Product) => {
         return cart.hasOwnProperty(product.id);
@@ -20,13 +21,20 @@ export function useCart() {
         }
     }
     
-    const removeFromCart = async (productId: string) => {
+    const removeFromCart = async (productId: string, quantity?: number) => {
         if (userData) {
-            await cartService.removeFromUserCart(userData.email, productId);
+            await cartService.removeFromUserCart(userData.email, productId, quantity);
             const newCart = await cartService.getUserCart(userData.email);
             setCart(newCart);
         }
-    }   
+    } 
+
+    const clearCart = async () => {
+        if (userData) {
+            const newCart = await cartService.clearUserCart(userData.email);
+            setCart(newCart);
+        }
+    }
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -42,6 +50,7 @@ export function useCart() {
         cart,
         addToCart,
         removeFromCart,
-        isInCart        
+        isInCart,
+        clearCart       
     }
 }
