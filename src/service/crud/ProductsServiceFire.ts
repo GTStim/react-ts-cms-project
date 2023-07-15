@@ -104,4 +104,13 @@ export default class ProductsServiceFire implements ProductsService {
         }
         return product;
     }
+
+    async getProductById(id: string): Promise<Product> {
+        const docRef: DocumentReference = this.getDocRef(id);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+            throw 'Product not found';
+        }
+        return docSnap.data() as Product;
+    }
 }

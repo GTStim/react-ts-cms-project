@@ -6,4 +6,5 @@ export default interface ProductsService {
     getProducts(): Observable<Product[] | string>;
     deleteProduct(id: any): Promise<void>;
     updateProduct(prod: Product): Promise<Product>;    
+    getProductById(id: string): Promise<Product>
 }
