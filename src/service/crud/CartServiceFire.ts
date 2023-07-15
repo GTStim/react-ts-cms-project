@@ -1,31 +1,40 @@
 import Product from '../../model/Product';
 
 import appFirebase from '../../config/firebase-config';
-import { getFirestore, collection, deleteDoc, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { getFirestore, collection, CollectionReference, DocumentReference, doc, getDoc, setDoc } from 'firebase/firestore';
 
 import CartService from './CartService';
 
 export default class CartServiceFire implements CartService {
-    private userCarts = collection(getFirestore(appFirebase), 'userCarts');
+    private usersRef: CollectionReference = collection(getFirestore(appFirebase), 'users');
 
-    async addToUserCart(userId: string, product: Product): Promise<void> {
-        const cartRef = collection(this.userCarts, userId);
-        await addDoc(cartRef, product);
+    async addToUserCart(userId: string, productId: string, quantity: number): Promise<void> {
+        const cartRef: DocumentReference = doc(this.usersRef, userId);
+        const existingDoc = await getDoc(cartRef);
+        let currentCart: { [productId: string]: number } = {};
+        if (existingDoc.exists()) {
+            currentCart = existingDoc.data()?.cart || {};
+        }
+        currentCart[productId] = (currentCart[productId] || 0) + quantity;
+        await setDoc(cartRef, { cart: currentCart });
     }
-
-    async getUserCart(userId: string): Promise<Product[]> {
-        const cartRef = collection(this.userCarts, userId);
-        const cartSnap = await getDocs(cartRef);
-        return cartSnap.docs.map((doc) => doc.data() as Product);
+    
+    async getUserCart(userId: string): Promise<{ [productId: string]: number }> {
+        const cartRef: DocumentReference = doc(this.usersRef, userId);
+        const existingDoc = await getDoc(cartRef);
+        if (existingDoc.exists()) {
+            return existingDoc.data()?.cart || {};
+        }
+        return {};
     }
-
-    async removeFromUserCart(userId: string, product: Product): Promise<void> {
-        const cartRef = collection(this.userCarts, userId);
-        const productRef = query(cartRef, where('id', '==', product));
-        const productSnap = await getDocs(productRef);
-        if (!productSnap.empty) {
-            const productDoc = productSnap.docs[0];
-            await deleteDoc(productDoc.ref);
+    
+    async removeFromUserCart(userId: string, productId: string): Promise<void> {
+        const cartRef: DocumentReference = doc(this.usersRef, userId);
+        const existingDoc = await getDoc(cartRef);
+        if (existingDoc.exists()) {
+            const currentCart: { [productId: string]: number } = existingDoc.data()?.cart || {};
+            delete currentCart[productId];
+            await setDoc(cartRef, { cart: currentCart });
         }
     }
 }

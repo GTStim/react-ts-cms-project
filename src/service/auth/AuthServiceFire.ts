@@ -1,10 +1,10 @@
 import LoginData from '../../model/LoginData';
 import UserData from '../../model/UserData';
 import AuthService from './AuthService';
-import { getFirestore, collection, getDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, getDoc, doc, addDoc } from 'firebase/firestore';
 import {
     AuthProvider,
-    GoogleAuthProvider,    
+    GoogleAuthProvider,
     createUserWithEmailAndPassword,
     getAuth,
     signInWithEmailAndPassword,
@@ -13,19 +13,16 @@ import {
 } from 'firebase/auth';
 import appFirebase from '../../config/firebase-config';
 
-const mapProviders: Map<string, AuthProvider> = new Map([
-    ['GOOGLE', new GoogleAuthProvider()],    
-]);
+const mapProviders: Map<string, AuthProvider> = new Map([['GOOGLE', new GoogleAuthProvider()]]);
 
 function getErrorMessage(error: any): string {
     let errorMessage = '';
-    
 
     switch (error.code) {
         case 'auth/email-already-in-use':
             errorMessage = 'This email is already in use!';
             break;
-        case 'auth/invalid-email' :
+        case 'auth/invalid-email':
             errorMessage = 'The email address is badly formatted!';
             break;
         case 'auth/wrong-password' && 'auth/user-not-found':
@@ -37,10 +34,7 @@ function getErrorMessage(error: any): string {
     return errorMessage;
 }
 
-
-
 export default class AuthServiceFire implements AuthService {
-
     getAvailableProvider(): { providerName: string; providerIconUrl: string }[] {
         return [
             {
@@ -51,6 +45,7 @@ export default class AuthServiceFire implements AuthService {
     }
     private auth = getAuth(appFirebase);
     private administrators = collection(getFirestore(appFirebase), 'administrators');
+    private usersRef = collection(getFirestore(appFirebase), 'users');
     private async isAdmin(uid: any): Promise<boolean> {
         const docRef = doc(this.administrators, uid);
         return (await getDoc(docRef)).exists();
@@ -75,17 +70,25 @@ export default class AuthServiceFire implements AuthService {
     async register(loginData: LoginData): Promise<UserData> {
         let userData: UserData = null;
         try {
-            const userAuth = await createUserWithEmailAndPassword(this.auth, loginData.email, loginData.password);
+            const userAuth = await createUserWithEmailAndPassword(
+                this.auth,
+                loginData.email,
+                loginData.password,
+            );
             userData = {
                 email: userAuth.user.email as string,
-                role: await this.isAdmin(userAuth.user.uid) ? 'admin' : 'user'
-            }
+                role: (await this.isAdmin(userAuth.user.uid)) ? 'admin' : 'user',
+            };
+
+            await addDoc(this.usersRef, {
+                uid: userAuth.user.uid,
+                cart: [],
+            });
         } catch (error: any) {
             throw new Error(getErrorMessage(error));
         }
         return userData;
     }
-    
 
     logout(): Promise<void> {
         return signOut(this.auth);

@@ -28,7 +28,7 @@ const ProductsPage: React.FC = () => {
 
     const handleAddToCart = (product: Product) => {
         const quantity = quantities[product.id] || 1;
-        addToCart(product, quantity);
+        addToCart(product.id, quantity);
         setAlertMessage(
             `Added ${quantity} of "${product.title}" with total price $${
                 product.price * quantity
@@ -38,7 +38,7 @@ const ProductsPage: React.FC = () => {
     };
 
     const handleRemoveFromCart = (product: Product) => {
-        removeFromCart(product);
+        removeFromCart(product.id);
         setAlertMessage(`Product "${product.title}" was removed from your cart!`);
     };
 
