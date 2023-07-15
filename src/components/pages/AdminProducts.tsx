@@ -1,5 +1,5 @@
 import { Box, Modal, useMediaQuery, useTheme } from "@mui/material";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useRef, useMemo } from "react";
 import Product from "../../model/Product";
 import { productsService } from "../../config/service-config"; 
 import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
