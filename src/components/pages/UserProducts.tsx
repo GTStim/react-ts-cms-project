@@ -34,7 +34,7 @@ const ProductsPage: React.FC = () => {
                 product.price * quantity
             } to your cart!`,
         );
-        setQuantities({ ...quantities, [product.id]: 1 });
+        
     };
 
     const handleRemoveFromCart = (product: Product) => {

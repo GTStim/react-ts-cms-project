@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button,  IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useCart } from '../../hooks/cartHooks';
@@ -16,7 +16,7 @@ const Cart: React.FC = () => {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [productToRemove, setProductToRemove] = useState<Product | null>(null);
     const [quantities, setQuantities] = useState<{ [productId: string]: number }>({});
-    const [cartQuantities, setCartQuantities] = useState<{ [productId: string]: number }>({});
+    
 
     const columns: GridColDef[] = [
         { field: 'title', headerName: 'Title', flex: 0.7 },
