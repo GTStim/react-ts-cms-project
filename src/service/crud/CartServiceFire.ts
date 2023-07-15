@@ -37,4 +37,20 @@ export default class CartServiceFire implements CartService {
             await setDoc(cartRef, { cart: currentCart });
         }
     }
+
+    async updateUserCart(userId: string, productId: string, newQuantity: number): Promise<void> {
+        const cartRef: DocumentReference = doc(this.usersRef, userId);
+        const existingDoc = await getDoc(cartRef);
+        if (existingDoc.exists()) {
+            const currentCart: { [productId: string]: number } = existingDoc.data()?.cart || {};
+            if (currentCart.hasOwnProperty(productId)) {
+                currentCart[productId] = newQuantity;
+                await setDoc(cartRef, { cart: currentCart });
+            } else {
+                throw new Error('Product not found in the cart');
+            }
+        } else {
+            throw new Error('User not found');
+        }
+    }
 }

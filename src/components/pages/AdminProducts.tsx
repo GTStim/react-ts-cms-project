@@ -1,25 +1,33 @@
-import { Box, Modal, useMediaQuery, useTheme } from "@mui/material";
-import { useState, useRef, useMemo } from "react";
-import Product from "../../model/Product";
-import { productsService } from "../../config/service-config"; 
-import { DataGrid, GridActionsCellItem, GridColDef } from "@mui/x-data-grid";
+import { Box, Modal, useMediaQuery, useTheme } from '@mui/material';
+import { useState, useRef, useMemo } from 'react';
+import Product from '../../model/Product';
+import { productsService } from '../../config/service-config';
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 
-import { Delete, Edit, Visibility } from "@mui/icons-material"; 
-import { useSelectorAuth } from "../../redux/store";
-import { Confirmation } from "../common/Confirmation";
-import { ProductForm } from "../forms/ProductForm";
-import InputResult from "../../model/InputResult";
-import { useDispatchCode, useSelectorProducts } from "../../hooks/hooks"; 
-import ProductCard from "../cards/ProductCard"; 
+import { Delete, Edit, Visibility } from '@mui/icons-material';
+import { useSelectorAuth } from '../../redux/store';
+import { Confirmation } from '../common/Confirmation';
+import { ProductForm } from '../forms/ProductForm';
+import InputResult from '../../model/InputResult';
+import { useDispatchCode, useSelectorProducts } from '../../hooks/hooks';
+import ProductCard from '../cards/ProductCard';
 
-const columnsCommon: GridColDef[] = [    
+const columnsCommon: GridColDef[] = [
     {
-        field: 'id', headerName: 'ID', flex: 0.5, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
+        field: 'id',
+        headerName: 'ID',
+        flex: 0.5,
+        headerClassName: 'data-grid-header',
+        align: 'center',
+        headerAlign: 'center',
     },
     {
-        field: 'category', headerName: 'Category', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
+        field: 'category',
+        headerName: 'Category',
+        flex: 0.7,
+        headerClassName: 'data-grid-header',
+        align: 'center',
+        headerAlign: 'center',
     },
     {
         field: 'image',
@@ -28,27 +36,37 @@ const columnsCommon: GridColDef[] = [
         headerClassName: 'data-grid-header',
         align: 'center',
         headerAlign: 'center',
-        renderCell: (params) => (
-            <img src={params.value} alt="product" width="50" height="50"/>
-        )
+        renderCell: (params) => <img src={params.value} alt="product" width="50" height="50" />,
     },
     {
-        field: 'title', headerName: 'Title', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
+        field: 'title',
+        headerName: 'Title',
+        flex: 0.7,
+        headerClassName: 'data-grid-header',
+        align: 'center',
+        headerAlign: 'center',
     },
     {
-        field: 'description', headerName: 'Description', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center'
-    },    
-    
+        field: 'description',
+        headerName: 'Description',
+        flex: 0.7,
+        headerClassName: 'data-grid-header',
+        align: 'center',
+        headerAlign: 'center',
+    },
+
     {
-        field: 'price', headerName: 'Price', type: 'number', flex: 0.7, headerClassName: 'data-grid-header',
-        align: 'center', headerAlign: 'center', valueFormatter: (params) => `$${params.value}`
-    }
-   
-   ];
-   
-   
+        field: 'price',
+        headerName: 'Price',
+        type: 'number',
+        flex: 0.7,
+        headerClassName: 'data-grid-header',
+        align: 'center',
+        headerAlign: 'center',
+        valueFormatter: (params) => `$${params.value}`,
+    },
+];
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -64,47 +82,56 @@ const style = {
 const Products: React.FC = () => {
     const columnsAdmin: GridColDef[] = [
         {
-            field: 'actions', type: "actions", headerName: 'Tools', getActions: (params) => {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Tools',
+            getActions: (params) => {
                 return [
-                    <GridActionsCellItem label="remove" icon={<Delete />}
-                        onClick={() => removeProduct(params.id)
-                        } />,
-                    <GridActionsCellItem label="update" icon={<Edit />}
+                    <GridActionsCellItem
+                        label="remove"
+                        icon={<Delete />}
+                        onClick={() => removeProduct(params.id)}
+                    />,
+                    <GridActionsCellItem
+                        label="update"
+                        icon={<Edit />}
                         onClick={() => {
                             productId.current = params.id as any;
                             if (params.row) {
                                 const prod = params.row;
                                 prod && (product.current = prod);
-                                setFlEdit(true)
+                                setFlEdit(true);
                             }
-    
-                        }
-                        } />
-                ] ;
-            }
-        }
-       ]
-       const columnsPortrait: GridColDef[] = [
+                        }}
+                    />,
+                ];
+            },
+        },
+    ];
+    const columnsPortrait: GridColDef[] = [
         columnsCommon[0],
         columnsCommon[1],
         {
-            field: 'actions', type: "actions", getActions: (params) => {
-                return [                   
-                    <GridActionsCellItem label="details" icon={<Visibility />}
+            field: 'actions',
+            type: 'actions',
+            getActions: (params) => {
+                return [
+                    <GridActionsCellItem
+                        label="details"
+                        icon={<Visibility />}
                         onClick={() => {
                             productId.current = params.id as any;
                             if (params.row) {
                                 const prod = params.row;
                                 prod && (product.current = prod);
-                                setFlDetails(true)
+                                setFlDetails(true);
                             }
-    
-                        }
-                        } />
-                ] ;
-            }
-        }
-       ]
+                        }}
+                    />,
+                ];
+            },
+        },
+    ];
     const dispatch = useDispatchCode();
     const userData = useSelectorAuth();
     const products = useSelectorProducts();
@@ -120,13 +147,11 @@ const Products: React.FC = () => {
     const productId = useRef('');
     const confirmFn = useRef<any>(null);
     const product = useRef<Product | undefined>();
-    
-    
+
     function getColumns(): GridColDef[] {
-        
         return isPortrait ? columnsPortrait : getColumnsFromLandscape();
     }
-    function getColumnsFromLandscape(): GridColDef[]{
+    function getColumnsFromLandscape(): GridColDef[] {
         let res: GridColDef[] = columnsCommon;
         if (userData && userData.role === 'admin') {
             res = res.concat(columnsAdmin);
@@ -134,8 +159,8 @@ const Products: React.FC = () => {
         return res;
     }
     function removeProduct(id: any) {
-        title.current = "Remove Product object?";
-        const product = products.find(prod => prod.id === id);
+        title.current = 'Remove Product object?';
+        const product = products.find((prod) => prod.id === id);
         content.current = `You are going remove product with id ${product?.id}`;
         productId.current = id;
         confirmFn.current = actualRemove;
@@ -154,10 +179,10 @@ const Products: React.FC = () => {
         setOpenConfirm(false);
     }
     function updateProduct(prod: Product): Promise<InputResult> {
-        setFlEdit(false)
+        setFlEdit(false);
         const res: InputResult = { status: 'error', message: '' };
         if (JSON.stringify(product.current) != JSON.stringify(prod)) {
-            title.current = "Update Product object?";
+            title.current = 'Update Product object?';
             product.current = prod;
             content.current = `You are going update product with id ${prod.id}`;
             confirmFn.current = actualUpdate;
@@ -166,60 +191,65 @@ const Products: React.FC = () => {
         return Promise.resolve(res);
     }
     async function actualUpdate(isOk: boolean) {
-       
         let errorMessage: string = '';
 
         if (isOk) {
             try {
                 await productsService.updateProduct(product.current!);
             } catch (error: any) {
-                errorMessage = error
+                errorMessage = error;
             }
         }
         dispatch(errorMessage, '');
         setOpenConfirm(false);
-
     }
-    function cardAction(id: number, isDelete: boolean){
+    function cardAction(id: number, isDelete: boolean) {
         if (isDelete) {
             removeProduct(id);
         } else {
-            setFlEdit(true)
+            setFlEdit(true);
         }
-        setFlDetails(false)
+        setFlDetails(false);
     }
 
-    return <Box sx={{
-        display: 'flex', justifyContent: 'center',
-        alignContent: 'center'
-    }}>
-        <Box sx={{ height: '80vh', width: '95vw' }}>
-            <DataGrid columns={columns} rows={products} />
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignContent: 'center',
+            }}
+        >
+            <Box sx={{ height: '80vh', width: '95vw' }}>
+                <DataGrid columns={columns} rows={products} />
+            </Box>
+            <Confirmation
+                confirmFn={confirmFn.current}
+                open={openConfirm}
+                title={title.current}
+                content={content.current}
+            ></Confirmation>
+            <Modal
+                open={openEdit}
+                onClose={() => setFlEdit(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <ProductForm submitFn={updateProduct} productUpdated={product.current} />
+                </Box>
+            </Modal>
+            <Modal
+                open={openDetails}
+                onClose={() => setFlDetails(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <ProductCard actionFn={cardAction} product={product.current!} />
+                </Box>
+            </Modal>
         </Box>
-        <Confirmation confirmFn={confirmFn.current} open={openConfirm}
-            title={title.current} content={content.current}></Confirmation>
-        <Modal
-            open={openEdit}
-            onClose={() => setFlEdit(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <ProductForm submitFn={updateProduct} productUpdated={product.current} />
-            </Box>
-        </Modal>
-        <Modal
-            open={openDetails}
-            onClose={() => setFlDetails(false)}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-                <ProductCard actionFn={cardAction} product={product.current!} />
-            </Box>
-        </Modal>
-
-
-    </Box>
-}
+    );
+};
 export default Products;

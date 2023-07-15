@@ -26,7 +26,7 @@ export function useCart() {
             const newCart = await cartService.getUserCart(userData.email);
             setCart(newCart);
         }
-    }
+    }   
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -42,6 +42,6 @@ export function useCart() {
         cart,
         addToCart,
         removeFromCart,
-        isInCart
+        isInCart        
     }
 }
