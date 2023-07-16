@@ -1,4 +1,4 @@
-import { Box, Button,  IconButton, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { useCart } from '../../hooks/cartHooks';
@@ -16,7 +16,9 @@ const Cart: React.FC = () => {
     const [openConfirm, setOpenConfirm] = useState(false);
     const [productToRemove, setProductToRemove] = useState<Product | null>(null);
     const [quantities, setQuantities] = useState<{ [productId: string]: number }>({});
-    
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // проверка на мобильное устройство
 
     const columns: GridColDef[] = [
         { field: 'title', headerName: 'Title', flex: 0.7 },
@@ -144,9 +146,9 @@ const Cart: React.FC = () => {
                 alignItems: 'center',
             }}
         >
-            <Box sx={{ height: '80vh', width: '90vw' }}>
-                <DataGrid columns={columns} rows={rows} />
-            </Box>
+           <Box sx={{ height: isMobile ? '60vh' : '80vh', width: '90vw' }}>
+            <DataGrid columns={columns} rows={rows} />
+        </Box>
             <Confirmation
                 open={openConfirm}
                 title={productToRemove ? 'Delete a product?' : 'Delete all products?'}
@@ -184,14 +186,28 @@ const Cart: React.FC = () => {
                     alignItems: 'center',
                     marginTop: '1rem',
                     width: '90vw',
+                    flexDirection: isMobile ? 'column' : 'row',
                 }}
             >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
                     <p style={{ margin: '1rem' }}>Total items: {totalItems}</p>
                     <p style={{ margin: '1rem' }}>Total products: {productCount}</p>
                     <p style={{ margin: '1rem' }}>Total sum: ${totalSum}</p>
                 </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginTop: isMobile ? '1rem' : 'initial', // Если мобильное устройство, добавляем отступ сверху
+                    }}
+                >
                     <Button
                         variant="contained"
                         color="primary"
