@@ -144,9 +144,10 @@ const Cart: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                
             }}
         >
-           <Box sx={{ height: isMobile ? '60vh' : '80vh', width: '90vw' }}>
+           <Box sx={{ height: isMobile ? '60vh' : '80vh', width: '90vw', backgroundColor: "white"}}>
             <DataGrid columns={columns} rows={rows} />
         </Box>
             <Confirmation

@@ -220,7 +220,7 @@ const Products: React.FC = () => {
                 alignContent: 'center',
             }}
         >
-            <Box sx={{ height: '80vh', width: '95vw' }}>
+            <Box sx={{ height: '80vh', width: '95vw', backgroundColor: "white" }}>
                 <DataGrid columns={columns} rows={products} />
             </Box>
             <Confirmation
