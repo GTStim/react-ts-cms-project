@@ -47,7 +47,7 @@ const ProductsPage: React.FC = () => {
             {products.map((product) => {
                 const productQuantity = quantities[product.id] || 1; // Получаем количество товара
                 return (
-                    <Grid item xs={6} sm={3} lg={2} key={product.id}>
+                    <Grid item xs={6} sm={3} lg={3} key={product.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                             <CardMedia
                                 component="img"
