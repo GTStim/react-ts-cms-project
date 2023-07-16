@@ -44,8 +44,7 @@ export default class AuthServiceFire implements AuthService {
         ];
     }
     private auth = getAuth(appFirebase);
-    private administrators = collection(getFirestore(appFirebase), 'administrators');
-    private usersRef = collection(getFirestore(appFirebase), 'users');
+    private administrators = collection(getFirestore(appFirebase), 'administrators');    
     private async isAdmin(uid: any): Promise<boolean> {
         const docRef = doc(this.administrators, uid);
         return (await getDoc(docRef)).exists();
@@ -78,12 +77,8 @@ export default class AuthServiceFire implements AuthService {
             userData = {
                 email: userAuth.user.email as string,
                 role: (await this.isAdmin(userAuth.user.uid)) ? 'admin' : 'user',
-            };
+            };            
 
-            await addDoc(this.usersRef, {
-                uid: userAuth.user.uid,
-                cart: [],
-            });
         } catch (error: any) {
             throw new Error(getErrorMessage(error));
         }

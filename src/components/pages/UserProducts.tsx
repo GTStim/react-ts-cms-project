@@ -31,6 +31,7 @@ const ProductsPage: React.FC = () => {
     const [quantities, setQuantities] = useState<{ [productId: string]: number }>({});
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    
     const handleAddToCart = (product: Product) => {
         const quantity = quantities[product.id] || 1;
         addToCart(product.id, quantity);
@@ -42,7 +43,8 @@ const ProductsPage: React.FC = () => {
     };
 
     const handleRemoveFromCart = (product: Product) => {
-        removeFromCart(product.id);
+        removeFromCart(product.id);   
+        setQuantities({...quantities, [product.id]: 1});    
         setAlertMessage(`Product "${product.title}" was removed from your cart!`);
     };
 

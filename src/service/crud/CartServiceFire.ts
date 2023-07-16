@@ -1,5 +1,3 @@
-import Product from '../../model/Product';
-
 import appFirebase from '../../config/firebase-config';
 import {
     getFirestore,
