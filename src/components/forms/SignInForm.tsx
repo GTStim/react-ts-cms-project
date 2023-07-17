@@ -36,8 +36,6 @@ type Props = {
     networks?: NetworkType[];
 };
 
-
-
 const SignInForm: React.FC<Props> = ({ submitFn, registerFn, networks }) => {
     const message = React.useRef<string>('');
     const [open, setOpen] = React.useState(false);
@@ -132,8 +130,8 @@ const SignInForm: React.FC<Props> = ({ submitFn, registerFn, networks }) => {
                                 <Button
                                     type="submit"
                                     fullWidth
-                                    variant="contained" 
-                                    onClick={handleRegistration}                                   
+                                    variant="contained"
+                                    onClick={handleRegistration}
                                 >
                                     Sign up
                                 </Button>

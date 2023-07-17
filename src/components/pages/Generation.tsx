@@ -1,8 +1,8 @@
-import productsData from '../../data/test-prod-json.json';
+import productsData from '../../data/productsData.json';
 import { useDispatch } from 'react-redux';
 import InputResult from '../../model/InputResult';
 import Input from '../common/Input';
-import { productsService} from '../../config/service-config';
+import { productsService } from '../../config/service-config';
 import CodeType from '../../model/CodeType';
 import { codeActions } from '../../redux/slices/codeSlice';
 import Product from '../../model/Product';
@@ -14,7 +14,7 @@ function getRandomProduct(): Product {
 
 const Generation: React.FC = () => {
     const dispatch = useDispatch();
-    
+
     function onSubmit(value: string): InputResult {
         const amount = +value;
         const res: InputResult = { status: 'success', message: '' };

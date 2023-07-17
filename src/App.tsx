@@ -23,7 +23,7 @@ import process from "process";
 import AddProduct from "./components/pages/AddProduct";
 import UserProducts from "./components/pages/UserProducts";
 import AdminProducts from "./components/pages/AdminProducts";
-const {always, authenticated, admin, noadmin, noauthenticated, noauth} = routesConfig;
+const { authenticated, admin, noadmin, noauthenticated, noauth} = routesConfig;
 type RouteTypeOrder = RouteType & {order?: number}
 
 function getRoutes(userData: UserData): RouteType[] {

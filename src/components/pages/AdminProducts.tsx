@@ -181,7 +181,7 @@ const Products: React.FC = () => {
     function updateProduct(prod: Product): Promise<InputResult> {
         setFlEdit(false);
         const res: InputResult = { status: 'error', message: '' };
-        if (JSON.stringify(product.current) != JSON.stringify(prod)) {
+        if (JSON.stringify(product.current) !== JSON.stringify(prod)) {
             title.current = 'Update Product object?';
             product.current = prod;
             content.current = `You are going update product with id ${prod.id}`;
@@ -220,7 +220,7 @@ const Products: React.FC = () => {
                 alignContent: 'center',
             }}
         >
-            <Box sx={{ height: '80vh', width: '95vw', backgroundColor: "white" }}>
+            <Box sx={{ height: '80vh', width: '95vw', backgroundColor: 'white' }}>
                 <DataGrid columns={columns} rows={products} />
             </Box>
             <Confirmation

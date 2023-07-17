@@ -1,4 +1,3 @@
-
 import { Button, Grid, TextField, Box } from '@mui/material';
 import Product from '../../model/Product';
 import InputResult from '../../model/InputResult';
@@ -20,7 +19,7 @@ const initialProduct: Product = {
 
 export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
     const [product, setProduct] = useState<Product>(productUpdated || initialProduct);
-  
+
     async function onSubmitFn(event: any) {
         event.preventDefault();
         const res = await submitFn(product);
@@ -31,10 +30,9 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
     function onReset() {
         setProduct(initialProduct);
     }
-  
+
     return (
-       
-        <Box sx={{ marginTop: { sm: '25vh' }}}>
+        <Box sx={{ marginTop: { sm: '25vh' } }}>
             <form onSubmit={onSubmitFn}>
                 <Grid container spacing={4} justifyContent="center">
                     <Grid item xs={8} sm={5}>
@@ -87,10 +85,11 @@ export const ProductForm: React.FC<Props> = ({ submitFn, productUpdated }) => {
 
                 <Box sx={{ marginTop: { xs: '10vh', sm: '5vh' }, textAlign: 'center' }}>
                     <Button type="submit">Submit</Button>
-                     <Button type="reset" onClick={onReset}>Reset</Button>
+                    <Button type="reset" onClick={onReset}>
+                        Reset
+                    </Button>
                 </Box>
             </form>
         </Box>
-        
     );
 };

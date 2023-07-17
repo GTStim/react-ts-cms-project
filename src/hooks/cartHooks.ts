@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import { useEffect, useState } from 'react';
 import Product from '../model/Product';
 import { cartService } from '../config/service-config';

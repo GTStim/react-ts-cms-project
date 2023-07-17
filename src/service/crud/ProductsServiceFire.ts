@@ -1,3 +1,4 @@
+/* eslint-disable no-throw-literal */
 import { Observable, catchError, of } from 'rxjs';
 import Product from '../../model/Product';
 import ProductsService from './ProductsService';

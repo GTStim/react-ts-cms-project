@@ -1,4 +1,3 @@
-// src\components\pages\UserProducts.tsx
 import React from 'react';
 import { useSelectorProducts } from '../../hooks/hooks';
 import { useCart } from '../../hooks/cartHooks';
@@ -31,7 +30,7 @@ const ProductsPage: React.FC = () => {
     const [quantities, setQuantities] = useState<{ [productId: string]: number }>({});
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-    
+
     const handleAddToCart = (product: Product) => {
         const quantity = quantities[product.id] || 1;
         addToCart(product.id, quantity);
@@ -43,8 +42,8 @@ const ProductsPage: React.FC = () => {
     };
 
     const handleRemoveFromCart = (product: Product) => {
-        removeFromCart(product.id);   
-        setQuantities({...quantities, [product.id]: 1});    
+        removeFromCart(product.id);
+        setQuantities({ ...quantities, [product.id]: 1 });
         setAlertMessage(`Product "${product.title}" was removed from your cart!`);
     };
 
@@ -105,42 +104,42 @@ const ProductsPage: React.FC = () => {
                                         >
                                             <Remove />
                                         </IconButton>
-                                        
-                                        
-                                            <Button
-                                                variant="contained"
-                                                sx={{
+
+                                        <Button
+                                            variant="contained"
+                                            sx={{
+                                                backgroundColor: isInCart(product) ? 'yellow' : '',
+                                                color: isInCart(product) ? 'black' : '',
+                                                fontSize: isInCart(product) ? '0.8rem' : '',
+                                                '&:hover': {
                                                     backgroundColor: isInCart(product) ? 'yellow' : '',
                                                     color: isInCart(product) ? 'black' : '',
-                                                    fontSize: isInCart(product) ? '0.8rem' : '',
-                                                    '&:hover': {
-                                                        backgroundColor: isInCart(product)
-                                                            ? 'yellow'
-                                                            : '',
-                                                        color: isInCart(product) ? 'black' : '',
-                                                    },
-                                                }}
-                                                onClick={
-                                                    isInCart(product)
-                                                        ? () => handleRemoveFromCart(product)
-                                                        : () => handleAddToCart(product)
-                                                }
-                                            >
-                                                {isSmallScreen ? (
-                                                    isInCart(product) ? (
-                                                        <DeleteOutline />
-                                                    ) : (
-                                                        <Badge badgeContent={productQuantity} color="primary">
+                                                },
+                                            }}
+                                            onClick={
+                                                isInCart(product)
+                                                    ? () => handleRemoveFromCart(product)
+                                                    : () => handleAddToCart(product)
+                                            }
+                                        >
+                                            {isSmallScreen ? (
+                                                isInCart(product) ? (
+                                                    <DeleteOutline />
+                                                ) : (
+                                                    <Badge
+                                                        badgeContent={productQuantity}
+                                                        color="primary"
+                                                    >
                                                         <ShoppingCartOutlined />
                                                     </Badge>
-                                                    )
-                                                ) : isInCart(product) ? (
-                                                    'Remove from Cart'
-                                                ) : (
-                                                    `Add to Cart (${productQuantity})`
-                                                )}
-                                            </Button>
-                                        
+                                                )
+                                            ) : isInCart(product) ? (
+                                                'Remove from Cart'
+                                            ) : (
+                                                `Add to Cart (${productQuantity})`
+                                            )}
+                                        </Button>
+
                                         <IconButton
                                             disabled={isInCart(product)}
                                             onClick={() =>

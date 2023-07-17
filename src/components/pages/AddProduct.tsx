@@ -4,10 +4,9 @@ import InputResult from '../../model/InputResult';
 import { productsService } from '../../config/service-config';
 import { useDispatchCode } from '../../hooks/hooks';
 
-
 const AddProduct: React.FC = () => {
     const dispatch = useDispatchCode();
-    
+
     async function submitFn(empl: Product): Promise<InputResult> {
         let errorMessage: string = '';
         let successMessage: string = '';

@@ -1,7 +1,7 @@
 import LoginData from '../../model/LoginData';
 import UserData from '../../model/UserData';
 import AuthService from './AuthService';
-import { getFirestore, collection, getDoc, doc, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDoc, doc } from 'firebase/firestore';
 import {
     AuthProvider,
     GoogleAuthProvider,
@@ -44,7 +44,7 @@ export default class AuthServiceFire implements AuthService {
         ];
     }
     private auth = getAuth(appFirebase);
-    private administrators = collection(getFirestore(appFirebase), 'administrators');    
+    private administrators = collection(getFirestore(appFirebase), 'administrators');
     private async isAdmin(uid: any): Promise<boolean> {
         const docRef = doc(this.administrators, uid);
         return (await getDoc(docRef)).exists();
@@ -77,8 +77,7 @@ export default class AuthServiceFire implements AuthService {
             userData = {
                 email: userAuth.user.email as string,
                 role: (await this.isAdmin(userAuth.user.uid)) ? 'admin' : 'user',
-            };            
-
+            };
         } catch (error: any) {
             throw new Error(getErrorMessage(error));
         }

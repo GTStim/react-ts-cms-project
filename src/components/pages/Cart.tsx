@@ -18,7 +18,7 @@ const Cart: React.FC = () => {
     const [quantities, setQuantities] = useState<{ [productId: string]: number }>({});
 
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // проверка на мобильное устройство
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); 
 
     const columns: GridColDef[] = [
         { field: 'title', headerName: 'Title', flex: 0.7 },
@@ -122,7 +122,7 @@ const Cart: React.FC = () => {
             }
 
             setRows(newRows);
-            setQuantities(newQuantities); // Устанавливаем начальные значения для quantities
+            setQuantities(newQuantities); 
         };
 
         loadCartData();
@@ -144,12 +144,11 @@ const Cart: React.FC = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                
             }}
         >
-           <Box sx={{ height: isMobile ? '60vh' : '75vh', width: '90vw', backgroundColor: "white"}}>
-            <DataGrid columns={columns} rows={rows} />
-        </Box>
+            <Box sx={{ height: isMobile ? '60vh' : '75vh', width: '90vw', backgroundColor: 'white' }}>
+                <DataGrid columns={columns} rows={rows} />
+            </Box>
             <Confirmation
                 open={openConfirm}
                 title={productToRemove ? 'Delete a product?' : 'Delete all products?'}
@@ -206,7 +205,7 @@ const Cart: React.FC = () => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginTop: isMobile ? '1rem' : 'initial', // Если мобильное устройство, добавляем отступ сверху
+                        marginTop: isMobile ? '1rem' : 'initial', 
                     }}
                 >
                     <Button
