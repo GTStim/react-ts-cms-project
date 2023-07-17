@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Product from '../../model/Product';
+import SnackbarAlert from '../common/SnackbarAlert';
 import { useSelectorProducts } from '../../hooks/hooks';
 import { useCart } from '../../hooks/cartHooks';
-import { Dialog, DialogContent, DialogTitle, useTheme } from '@mui/material';
-import { useMediaQuery } from '@mui/material';
-import { ShoppingCartOutlined, DeleteOutline } from '@mui/icons-material';
-import { Badge } from '@mui/material';
+import { useSelectorAuth } from '../../redux/store';
 import {
     Card,
     CardContent,
@@ -14,12 +13,14 @@ import {
     Button,
     IconButton,
     CardActions,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    useTheme,
+    useMediaQuery,
+    Badge,
 } from '@mui/material';
-import { useSelectorAuth } from '../../redux/store';
-import { useState } from 'react';
-import Product from '../../model/Product';
-import SnackbarAlert from '../common/SnackbarAlert';
-import { Add, Remove } from '@mui/icons-material';
+import { ShoppingCartOutlined, DeleteOutline, Add, Remove } from '@mui/icons-material';
 
 const ProductsPage: React.FC = () => {
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -47,10 +48,14 @@ const ProductsPage: React.FC = () => {
         setAlertMessage(`Product "${product.title}" was removed from your cart!`);
     };
 
+    const getButtonStyle = (product: Product) =>
+        isInCart(product) ? { backgroundColor: 'yellow', color: 'black', fontSize: '0.8rem' } : {};
+
     return (
         <Grid container spacing={3}>
             {products.map((product) => {
                 const productQuantity = quantities[product.id] || 1;
+                const buttonStyle = getButtonStyle(product);
                 return (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
                         <Card
@@ -92,66 +97,56 @@ const ProductsPage: React.FC = () => {
                                         mt: 'auto',
                                     }}
                                 >
-                                    <CardActions>
-                                        <IconButton
-                                            disabled={productQuantity <= 1 || isInCart(product)}
-                                            onClick={() =>
-                                                setQuantities({
-                                                    ...quantities,
-                                                    [product.id]: Math.max(productQuantity - 1, 1),
-                                                })
-                                            }
-                                        >
-                                            <Remove />
-                                        </IconButton>
+                                    <IconButton
+                                        disabled={productQuantity <= 1 || isInCart(product)}
+                                        onClick={() =>
+                                            setQuantities({
+                                                ...quantities,
+                                                [product.id]: Math.max(productQuantity - 1, 1),
+                                            })
+                                        }
+                                    >
+                                        <Remove />
+                                    </IconButton>
 
-                                        <Button
-                                            variant="contained"
-                                            sx={{
-                                                backgroundColor: isInCart(product) ? 'yellow' : '',
-                                                color: isInCart(product) ? 'black' : '',
-                                                fontSize: isInCart(product) ? '0.8rem' : '',
-                                                '&:hover': {
-                                                    backgroundColor: isInCart(product) ? 'yellow' : '',
-                                                    color: isInCart(product) ? 'black' : '',
-                                                },
-                                            }}
-                                            onClick={
-                                                isInCart(product)
-                                                    ? () => handleRemoveFromCart(product)
-                                                    : () => handleAddToCart(product)
-                                            }
-                                        >
-                                            {isSmallScreen ? (
-                                                isInCart(product) ? (
-                                                    <DeleteOutline />
-                                                ) : (
-                                                    <Badge
-                                                        badgeContent={productQuantity}
-                                                        color="primary"
-                                                    >
-                                                        <ShoppingCartOutlined />
-                                                    </Badge>
-                                                )
-                                            ) : isInCart(product) ? (
-                                                'Remove from Cart'
+                                    <Button
+                                        variant="contained"
+                                        sx={{
+                                            ...buttonStyle,
+                                            '&:hover': buttonStyle,
+                                        }}
+                                        onClick={
+                                            isInCart(product)
+                                                ? () => handleRemoveFromCart(product)
+                                                : () => handleAddToCart(product)
+                                        }
+                                    >
+                                        {isSmallScreen ? (
+                                            isInCart(product) ? (
+                                                <DeleteOutline />
                                             ) : (
-                                                `Add to Cart (${productQuantity})`
-                                            )}
-                                        </Button>
+                                                <Badge badgeContent={productQuantity} color="primary">
+                                                    <ShoppingCartOutlined />
+                                                </Badge>
+                                            )
+                                        ) : isInCart(product) ? (
+                                            'Remove from Cart'
+                                        ) : (
+                                            `Add to Cart (${productQuantity})`
+                                        )}
+                                    </Button>
 
-                                        <IconButton
-                                            disabled={isInCart(product)}
-                                            onClick={() =>
-                                                setQuantities({
-                                                    ...quantities,
-                                                    [product.id]: productQuantity + 1,
-                                                })
-                                            }
-                                        >
-                                            <Add />
-                                        </IconButton>
-                                    </CardActions>
+                                    <IconButton
+                                        disabled={isInCart(product)}
+                                        onClick={() =>
+                                            setQuantities({
+                                                ...quantities,
+                                                [product.id]: productQuantity + 1,
+                                            })
+                                        }
+                                    >
+                                        <Add />
+                                    </IconButton>
                                 </CardActions>
                             )}
                         </Card>
