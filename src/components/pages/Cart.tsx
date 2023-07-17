@@ -6,12 +6,11 @@ import { productsService } from '../../config/service-config';
 import { Delete, Add, Remove } from '@mui/icons-material';
 import Product from '../../model/Product';
 import SnackbarAlert from '../common/SnackbarAlert';
-import { Confirmation } from '../common/Confirmation';
+import {Confirmation} from '../common/Confirmation';
 
 const Cart: React.FC = () => {
     const { cart, addToCart, removeFromCart, clearCart } = useCart();
     const [rows, setRows] = useState<any[]>([]);
-    const [productCount, setProductCount] = useState(0);
     const [alertMessage, setAlertMessage] = useState<string | null>(null);
     const [openConfirm, setOpenConfirm] = useState(false);
     const [productToRemove, setProductToRemove] = useState<Product | null>(null);
@@ -20,78 +19,25 @@ const Cart: React.FC = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm')); 
 
-    const columns: GridColDef[] = [
-        { field: 'title', headerName: 'Title', flex: 0.7 },
-        {
-            field: 'price',
-            headerName: 'Price',
-            type: 'number',
-            flex: 0.7,
-            valueFormatter: (params) => `$${params.value}`,
-        },
-        {
-            field: 'quantity',
-            headerName: 'Quantity',
-            type: 'number',
-            flex: 0.5,
-            renderCell: (params) => (
-                <div>
-                    <IconButton size="small" onClick={() => decreaseQuantity(params.row.id)}>
-                        <Remove />
-                    </IconButton>
-                    {params.value}
-                    <IconButton size="small" onClick={() => increaseQuantity(params.row.id)}>
-                        <Add />
-                    </IconButton>
-                </div>
-            ),
-        },
-        {
-            field: 'totalPrice',
-            headerName: 'Total Price',
-            type: 'number',
-            flex: 0.7,
-            valueFormatter: (params) => `$${params.value}`,
-        },
-        {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Tools',
-            getActions: (params) => {
-                return [
-                    <GridActionsCellItem
-                        label="remove"
-                        icon={<Delete />}
-                        onClick={() => handleRemoveFromCart(params.row)}
-                    />,
-                ];
-            },
-        },
-    ];
-
     const handleRemoveFromCart = (product: Product) => {
         setProductToRemove(product);
         setOpenConfirm(true);
     };
 
-    const increaseQuantity = (productId: string) => {
-        const currentQuantity = quantities[productId];
-        addToCart(productId, 1);
+    const adjustQuantity = (productId: string, amount: number) => {
+        const currentQuantity = quantities[productId] || 0;
+        const newQuantity = currentQuantity + amount;
+
+        if (newQuantity > 0) {
+            addToCart(productId, amount);
+        } else {
+            removeFromCart(productId, -amount);
+        }
+
         setQuantities({
             ...quantities,
-            [productId]: currentQuantity + 1,
+            [productId]: newQuantity,
         });
-    };
-
-    const decreaseQuantity = (productId: string) => {
-        const currentQuantity = quantities[productId];
-        if (currentQuantity > 1) {
-            removeFromCart(productId, 1);
-            setQuantities({
-                ...quantities,
-                [productId]: currentQuantity - 1,
-            });
-        }
     };
 
     const handleRemoveAllFromCart = () => {
@@ -101,51 +47,62 @@ const Cart: React.FC = () => {
 
     useEffect(() => {
         const loadCartData = async () => {
-            const newRows = [];
-            const newQuantities: { [key: string]: number } = {};
-
-            for (let productId in cart) {
-                const quantity = cart[productId];
-                newQuantities[productId] = quantity;
-                const product = await productsService.getProductById(productId);
-
-                const totalPrice = product.price * quantity;
-
-                newRows.push({
-                    id: productId,
-                    title: product.title,
-                    price: product.price,
-                    quantity: quantity,
-                    totalPrice: totalPrice,
-                    checkbox: true,
-                });
-            }
-
+            const productIds = Object.keys(cart);
+            const products = await Promise.all(productIds.map(productId => productsService.getProductById(productId)));
+            const newRows = products.map(product => ({
+                id: product.id,
+                title: product.title,
+                price: product.price,
+                quantity: cart[product.id],
+                totalPrice: product.price * cart[product.id],
+                checkbox: true,
+            }));
+            
             setRows(newRows);
-            setQuantities(newQuantities); 
+            setQuantities(cart);
         };
 
         loadCartData();
     }, [cart]);
-    useEffect(() => {
-        setProductCount(Object.keys(cart).length);
-    }, [cart]);
 
-    const handleOrder = () => {
-        // Handle order here
-    };
+    const handleOrder = () => {};
 
     const totalItems = rows.reduce((sum, row) => sum + row.quantity, 0);
     const totalSum = parseFloat(rows.reduce((sum, row) => sum + row.totalPrice, 0).toFixed(2));
 
+    const columns: GridColDef[] = [
+        { field: 'title', headerName: 'Title', flex: 0.7 },
+        { field: 'price', headerName: 'Price', type: 'number', flex: 0.7, valueFormatter: params => `$${params.value}` },
+        {
+            field: 'quantity',
+            headerName: 'Quantity',
+            type: 'number',
+            flex: 0.5,
+            renderCell: params => (
+                <div>
+                    <IconButton size="small" onClick={() => adjustQuantity(params.row.id, -1)}><Remove /></IconButton>
+                    {params.value}
+                    <IconButton size="small" onClick={() => adjustQuantity(params.row.id, 1)}><Add /></IconButton>
+                </div>
+            ),
+        },
+        { field: 'totalPrice', headerName: 'Total Price', type: 'number', flex: 0.7, valueFormatter: params => `$${params.value}` },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Tools',
+            getActions: params => [
+                <GridActionsCellItem
+                    label="remove"
+                    icon={<Delete />}
+                    onClick={() => handleRemoveFromCart(params.row)}
+                />,
+            ],
+        },
+    ];
+
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Box sx={{ height: isMobile ? '60vh' : '75vh', width: '90vw', backgroundColor: 'white' }}>
                 <DataGrid columns={columns} rows={rows} />
             </Box>
@@ -157,18 +114,11 @@ const Cart: React.FC = () => {
                         ? `Are you sure you want to remove item "${productToRemove?.title}" from cart?`
                         : 'Are you sure you want to remove all items from your cart?'
                 }
-                confirmFn={(isOk: boolean) => {
+                confirmFn={isOk => {
                     if (isOk) {
                         if (productToRemove) {
-                            const currentQuantity = quantities[productToRemove.id];
-                            removeFromCart(productToRemove.id, currentQuantity);
-                            setQuantities({
-                                ...quantities,
-                                [productToRemove.id]: 0,
-                            });
-                            setAlertMessage(
-                                `Product "${productToRemove.title}" was removed from your cart!`,
-                            );
+                            adjustQuantity(productToRemove.id, -quantities[productToRemove.id]);
+                            setAlertMessage(`Product "${productToRemove.title}" was removed from your cart!`);
                         } else {
                             clearCart();
                             setQuantities({});
@@ -178,50 +128,17 @@ const Cart: React.FC = () => {
                     setOpenConfirm(false);
                 }}
             />
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginTop: '1rem',
-                    width: '90vw',
-                    flexDirection: isMobile ? 'column' : 'row',
-                }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                    }}
-                >
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', width: '90vw', flexDirection: isMobile ? 'column' : 'row' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <p style={{ margin: '1rem' }}>Total items: {totalItems}</p>
-                    <p style={{ margin: '1rem' }}>Total products: {productCount}</p>
+                    <p style={{ margin: '1rem' }}>Total products: {Object.keys(cart).length}</p>
                     <p style={{ margin: '1rem' }}>Total sum: ${totalSum}</p>
                 </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginTop: isMobile ? '1rem' : 'initial', 
-                    }}
-                >
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleOrder}
-                        style={{ marginRight: '1rem' }}
-                    >
-                        Order Now
-                    </Button>
-                    <Button variant="contained" color="primary" onClick={handleRemoveAllFromCart}>
-                        Delete all
-                    </Button>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: isMobile ? '1rem' : 'initial' }}>
+                    <Button variant="contained" color="primary" onClick={handleOrder} style={{ marginRight: '1rem' }}>Order Now</Button>
+                    <Button variant="contained" color="primary" onClick={handleRemoveAllFromCart}>Delete all</Button>
                 </Box>
             </Box>
-
             {alertMessage && <SnackbarAlert message={alertMessage} severity="success" />}
         </Box>
     );
