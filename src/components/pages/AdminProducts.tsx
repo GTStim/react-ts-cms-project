@@ -12,60 +12,6 @@ import InputResult from '../../model/InputResult';
 import { useDispatchCode, useSelectorProducts } from '../../hooks/hooks';
 import ProductCard from '../cards/ProductCard';
 
-const columnsCommon: GridColDef[] = [
-    {
-        field: 'id',
-        headerName: 'ID',
-        flex: 0.5,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-    },
-    {
-        field: 'category',
-        headerName: 'Category',
-        flex: 0.7,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-    },
-    {
-        field: 'image',
-        headerName: 'Image',
-        flex: 0.7,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-        renderCell: (params) => <img src={params.value} alt="product" width="50" height="50" />,
-    },
-    {
-        field: 'title',
-        headerName: 'Title',
-        flex: 0.7,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-    },
-    {
-        field: 'description',
-        headerName: 'Description',
-        flex: 0.7,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-    },
-
-    {
-        field: 'price',
-        headerName: 'Price',
-        type: 'number',
-        flex: 0.7,
-        headerClassName: 'data-grid-header',
-        align: 'center',
-        headerAlign: 'center',
-        valueFormatter: (params) => `$${params.value}`,
-    },
-];
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -80,40 +26,63 @@ const style = {
 };
 
 const Products: React.FC = () => {
-    const columnsAdmin: GridColDef[] = [
+    const columnsCommon: GridColDef[] = [
         {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Tools',
-            getActions: (params) => {
-                return [
-                    <GridActionsCellItem
-                        label="remove"
-                        icon={<Delete />}
-                        onClick={() => removeProduct(params.id)}
-                    />,
-                    <GridActionsCellItem
-                        label="update"
-                        icon={<Edit />}
-                        onClick={() => {
-                            productId.current = params.id as any;
-                            if (params.row) {
-                                const prod = params.row;
-                                prod && (product.current = prod);
-                                setFlEdit(true);
-                            }
-                        }}
-                    />,
-                ];
-            },
+            field: 'id',
+            headerName: 'ID',
+            flex: 0.5,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
         },
-    ];
-    const columnsPortrait: GridColDef[] = [
-        columnsCommon[0],
-        columnsCommon[1],
         {
-            field: 'actions',
+            field: 'category',
+            headerName: 'Category',
+            flex: 0.7,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
+        },
+        {
+            field: 'image',
+            headerName: 'Image',
+            flex: 0.7,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
+            renderCell: (params) => <img src={params.value} alt="product" width="50" height="50" />,
+        },
+        {
+            field: 'title',
+            headerName: 'Title',
+            flex: 0.7,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
+        },
+        {
+            field: 'description',
+            headerName: 'Description',
+            flex: 0.7,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
+        },
+    
+        {
+            field: 'price',
+            headerName: 'Price',
+            type: 'number',
+            flex: 0.7,
+            headerClassName: 'data-grid-header',
+            align: 'center',
+            headerAlign: 'center',
+            valueFormatter: (params) => `$${params.value}`,
+        },
+        {
+            field: 'details',
             type: 'actions',
+            headerName: 'Details',
             getActions: (params) => {
                 return [
                     <GridActionsCellItem
@@ -131,6 +100,41 @@ const Products: React.FC = () => {
                 ];
             },
         },
+    ];
+
+    const columnsAdmin: GridColDef[] = [
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Tools',
+            getActions: (params) => {
+                return [
+                    <GridActionsCellItem
+                        label="update"
+                        icon={<Edit />}
+                        onClick={() => {
+                            productId.current = params.id as any;
+                            if (params.row) {
+                                const prod = params.row;
+                                prod && (product.current = prod);
+                                setFlEdit(true);
+                            }
+                        }}
+                    />,
+                    <GridActionsCellItem
+                        label="remove"
+                        icon={<Delete />}
+                        onClick={() => removeProduct(params.id)}
+                    />,
+                    
+                ];
+            },
+        },
+    ];
+    const columnsPortrait: GridColDef[] = [
+        columnsCommon[0],
+        columnsCommon[1], 
+        columnsCommon[6]       
     ];
     const dispatch = useDispatchCode();
     const userData = useSelectorAuth();
@@ -153,9 +157,7 @@ const Products: React.FC = () => {
     }
     function getColumnsFromLandscape(): GridColDef[] {
         let res: GridColDef[] = columnsCommon;
-        if (userData && userData.role === 'admin') {
-            res = res.concat(columnsAdmin);
-        }
+        res = res.concat(columnsAdmin);
         return res;
     }
     function removeProduct(id: any) {
